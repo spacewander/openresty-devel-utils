@@ -80,11 +80,11 @@ sub process_file {
             $found_ver = 1;
             $skipping = $2;
             $ver =~ s{^(\d+)\.(\d{3})(\d{3})$}{join '.', int($1), int($2), int($3)}e;
-            w("$file: $orig_ver ($ver)");
+            print("$file: $orig_ver ($ver)\n");
             last;
 
         } elsif (/(?x) (?:_VERSION|version) \s* = \s* ([a-zA-Z_]\S*)/) {
-            w("$file: $1");
+            print("$file: $1\n");
             $found_ver = 1;
             last;
         }
@@ -97,9 +97,9 @@ sub process_file {
             $version = $ver;
         }
     }
-    if (!$found_ver) {
-        w("WARNING: No \"_VERSION\" or \"version\" field found in `$file`.");
-    }
+    # if (!$found_ver) {
+    #     w("WARNING: No \"_VERSION\" or \"version\" field found in `$file`.");
+    # }
     close $in;
 
     #p("Checking use of Lua global variables in file $file...");
@@ -178,7 +178,7 @@ sub process_file {
                                    |pairs|ipairs|assert|module|package
                                    |coroutine|[gs]etfenv|next|rawget|rawset
                                    |loadstring|dofile
-                                   |rawlen|select|arg|bit|debug|ngx|ndk)$/x)
+                                   |rawlen|select|arg|bit|debug|ngx|ndk|newproxy)$/x)
                 {
                     next;
                 }
@@ -207,7 +207,7 @@ sub process_file {
     }
 
     unless ($no_long_line_check) {
-        p("Checking line length exceeding 80...");
-        blank("grep -H -n -E --color '.{81}' $file");
+        p("Checking line length exceeding 100...");
+        blank("grep -H -n -E --color '.{101}' $file");
     }
 }
