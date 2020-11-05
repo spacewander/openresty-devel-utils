@@ -208,6 +208,6 @@ sub process_file {
 
     unless ($no_long_line_check) {
         p("Checking line length exceeding 100...");
-        blank("grep -H -n -E --color '.{101}' $file");
+        blank("grep -H -n -E --color '.{101}' $file  | awk '{ print \"ERROR:\" \$0  }'");
     }
 }
